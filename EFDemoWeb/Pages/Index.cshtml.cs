@@ -30,7 +30,17 @@ namespace EFDemoWeb.Pages
             var people = _db.People
                 .Include(a => a.Addresses)
                 .Include(e => e.EmailAddresses)
+                .Where(x => ApprovedAge(x.Age)) // this is a valid c# code but won't be converted to T-SQL and work on sql server
+                //.Where(x => x.Age >= 18 && x.Age <= 60) // this would work on sqls server
                 .ToList();
+
+            // if we use c# functionality the entity framework would fetch all data first and load it RAM then apply the filtration
+            // the filtration should be applied on sql server so put extra care of doing it always check xprofiler
+        }
+
+        private bool ApprovedAge(int age)
+        {
+            return (age >= 18 && age <= 60);
         }
 
         private void LoadSampleData()
