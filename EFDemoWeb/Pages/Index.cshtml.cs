@@ -36,6 +36,13 @@ namespace EFDemoWeb.Pages
 
             // if we use c# functionality the entity framework would fetch all data first and load it RAM then apply the filtration
             // the filtration should be applied on sql server so put extra care of doing it always check xprofiler
+            // an exception would occure asking to get the data first then apply your c# code
+            var example = _db.People
+                .Include(a => a.Addresses)
+                .Include(e => e.EmailAddresses)
+                .ToList()
+                .Where(x => ApprovedAge(x.Age));
+
         }
 
         private bool ApprovedAge(int age)
